@@ -25,6 +25,8 @@ type CartCtx = {
   clearCart: () => void;
   /** For optimistic UI */
   hydrated: boolean;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 };
 
 const CartContext = createContext<CartCtx | null>(null);
