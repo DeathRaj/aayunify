@@ -49,7 +49,7 @@ export function CartDrawer() {
               </button>
             </header>
 
-            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-6">
+            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-10">
               {lines.length === 0 ? (
                 <div className="text-center py-20 space-y-6">
                   <p className="text-botanical-500 uppercase tracking-widest text-xs">Apothecary is empty</p>
@@ -61,47 +61,76 @@ export function CartDrawer() {
                   </button>
                 </div>
               ) : (
-                lines.map((line) => (
-                  <div key={line.productId} className="flex gap-6 group">
-                    <div className="relative h-24 w-24 flex-shrink-0 rounded-2xl overflow-hidden bg-white border border-botanical-100 shadow-sm">
-                      <Image
-                        src={line.image || "/placeholder.jpg"}
-                        alt={line.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 flex flex-col justify-between py-1">
-                      <div className="flex justify-between gap-4">
-                        <h3 className="font-semibold text-botanical-900 leading-tight">{line.name}</h3>
-                        <button
-                          onClick={() => removeLine(line.productId)}
-                          className="text-[10px] uppercase tracking-widest text-botanical-400 hover:text-red-500 transition-colors"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center border border-botanical-100 rounded-full bg-white px-2">
-                          <button
-                            onClick={() => setQty(line.productId, line.quantity - 1)}
-                            className="p-1 px-2 text-botanical-500 hover:text-botanical-900"
-                          >
-                            −
-                          </button>
-                          <span className="px-2 text-xs font-bold text-botanical-800">{line.quantity}</span>
-                          <button
-                            onClick={() => setQty(line.productId, line.quantity + 1)}
-                            className="p-1 px-2 text-botanical-500 hover:text-botanical-900"
-                          >
-                            +
-                          </button>
+                <>
+                  <div className="space-y-6">
+                    {lines.map((line) => (
+                      <div key={line.productId} className="flex gap-6 group">
+                        <div className="relative h-24 w-24 flex-shrink-0 rounded-2xl overflow-hidden bg-white border border-botanical-100 shadow-sm">
+                          <Image
+                            src={line.image || "/placeholder.jpg"}
+                            alt={line.name}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
-                        <span className="font-semibold text-botanical-900">{currency(line.price * line.quantity)}</span>
+                        <div className="flex-1 flex flex-col justify-between py-1">
+                          <div className="flex justify-between gap-4">
+                            <h3 className="font-semibold text-botanical-900 leading-tight">{line.name}</h3>
+                            <button
+                              onClick={() => removeLine(line.productId)}
+                              className="text-[10px] uppercase tracking-widest text-botanical-400 hover:text-red-500 transition-colors"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center border border-botanical-100 rounded-full bg-white px-2">
+                              <button
+                                onClick={() => setQty(line.productId, line.quantity - 1)}
+                                className="p-1 px-2 text-botanical-500 hover:text-botanical-900"
+                              >
+                                −
+                              </button>
+                              <span className="px-2 text-xs font-bold text-botanical-800">{line.quantity}</span>
+                              <button
+                                onClick={() => setQty(line.productId, line.quantity + 1)}
+                                className="p-1 px-2 text-botanical-500 hover:text-botanical-900"
+                              >
+                                +
+                              </button>
+                            </div>
+                            <span className="font-semibold text-botanical-900">{currency(line.price * line.quantity)}</span>
+                          </div>
+                        </div>
                       </div>
+                    ))}
+                  </div>
+
+                  {/* Frequently Bought Together / Bundling Logic */}
+                  <div className="pt-8 border-t border-botanical-100/50">
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-botanical-400 mb-6">Complete your Ritual</h4>
+                    <div className="rounded-3xl bg-botanical-50/50 border border-botanical-100 p-6 flex gap-5 items-center">
+                      <div className="relative h-16 w-16 flex-shrink-0 rounded-xl overflow-hidden bg-white shadow-sm">
+                        <Image
+                          src="/images/bundle-orbit.png"
+                          alt="Bundle"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <p className="text-xs font-bold text-botanical-900 uppercase tracking-tight">The Luminous Bundle</p>
+                        <p className="text-[10px] text-botanical-500 leading-tight">Combine Moringa & ACV for peak metabolic harmony.</p>
+                      </div>
+                      <button 
+                        onClick={() => router.push("/shop")}
+                        className="bg-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest border border-botanical-200 hover:bg-botanical-800 hover:text-white transition-all shadow-sm"
+                      >
+                        Add
+                      </button>
                     </div>
                   </div>
-                ))
+                </>
               )}
             </div>
 
