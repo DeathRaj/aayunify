@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { brand } from "@/lib/brand";
 import { TrustBadgeStrip } from "@/components/sections/trust-badges";
 import { HeroWebGL } from "@/components/sections/hero-webgl";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -19,9 +19,16 @@ const staggerContainer = {
   },
 };
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      duration: 0.8, 
+      ease: [0.16, 1, 0.3, 1] 
+    } 
+  },
 };
 
 export function HeroSection() {
