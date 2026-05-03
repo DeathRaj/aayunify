@@ -1,15 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Float, MeshTransmissionMaterial, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
-import { useScroll, useTransform } from "framer-motion";
+import { useScroll } from "framer-motion";
 
 function WebGLScene() {
   const { scrollYProgress } = useScroll();
   const groupRef = useRef<THREE.Group>(null);
-  const { viewport } = useThree();
 
   // Scroll scrubbing for Z-axis and subtle rotation
   useFrame(() => {

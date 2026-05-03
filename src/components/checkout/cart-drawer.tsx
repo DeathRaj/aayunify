@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 function currency(amount: number) {

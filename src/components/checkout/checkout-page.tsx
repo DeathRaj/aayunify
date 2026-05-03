@@ -284,9 +284,9 @@ export function CheckoutPageClient() {
                 <input type="radio" name="payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} className="mt-1 text-botanical-600 focus:ring-botanical-500" />
                 <div className="space-y-2">
                   <strong className="block text-[15px] font-semibold tracking-tight text-botanical-900">Cash on delivery</strong>
-                  <p className="text-sm leading-relaxed text-botanical-600/90">
-                    Pay when your ritual arrives.
-                  </p>
+                  <p className="text-sm text-botanical-500 leading-relaxed">
+                  We&apos;ll notify you via WhatsApp with tracking details as soon as your ritual is dispatched.
+                </p>
                 </div>
               </label>
 
@@ -295,7 +295,7 @@ export function CheckoutPageClient() {
                 <div className="w-full space-y-4">
                   <strong className="block text-[15px] font-semibold tracking-tight text-botanical-900">WhatsApp Concierge</strong>
                   <p className="text-sm leading-relaxed text-botanical-600/90">
-                    Need a custom bundle or gifting help? Let's talk.
+                    Need a custom bundle or gifting help? Let&apos;s talk.
                   </p>
                   {paymentMethod === "whatsapp" && <WhatsAppButton variant="outline" className="w-full mt-2" />}
                 </div>
