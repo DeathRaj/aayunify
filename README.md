@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AayuUnify — Premium Ayurvedic D2C storefront
 
-## Getting Started
+Next.js 14 App Router storefront with Firebase Auth/Firestore, Tailwind rituals, ceremonial copy, Razorpay-ready scaffolding, WhatsApp escalation, merchant console, offline seed catalog for frictionless prototyping.
 
-First, run the development server:
+## Quick start
 
 ```bash
+cd aayunify
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [`http://localhost:3000`](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Brand editing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Rename or restyle centrally in [`src/lib/brand.ts`](src/lib/brand.ts) — typography + palette accents live inside Tailwind extensions inside [`tailwind.config.ts`](tailwind.config.ts) and [`src/app/globals.css`](src/app/globals.css).
 
-## Learn More
+## Firebase setup
 
-To learn more about Next.js, take a look at the following resources:
+1. Create a Firebase project → enable **Firestore** + **Authentication (Email/password)**.
+2. Add a web app · copy SDK keys into `.env.local` mirroring [.env.example](.env.example).
+3. Under **Authentication ▸ Users** create merchant accounts manually (or programmatically via Admin SDK bootstrap).
+4. Populate `NEXT_PUBLIC_ADMIN_EMAILS` with comma-separated admins that must match Firebase emails.
+5. Deploy Firestore security rules tailored to production — scaffold provided in [`firestore.rules`](firestore.rules).
+6. First time you subscribe to `orders` sorted by `createdAt`, Firebase may prompt you to create a composite index in the console — accept the deeplink suggestion.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### First catalog seed
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Sign into `/account` with an authorised admin Firebase user whose email matches your admin list.
+2. Visit `/admin/products` · click **Seed default catalog**.
+3. SKU remain editable/removable thereafter.
 
-## Deploy on Vercel
+Orders appear in `/admin/orders` after successful checkout persistence when Firebase env keys are wired.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Vercel deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push this folder to GitHub.
+2. Create a **Vercel** project referencing the repo.
+3. Paste environment variables (`NEXT_PUBLIC_*`) into Vercel project settings.
+4. Set `NEXT_PUBLIC_SITE_URL` (or rely on generated `VERCEL_URL` fallback in [`src/app/layout.tsx`](src/app/layout.tsx)).
+
+## Razorpay go-live checklist
+
+[`src/lib/razorpay.ts`](src/lib/razorpay.ts) documents orchestration hints. Secrets never ship to the browser — create orders + verify signatures Cloud-side (Firebase Function or Next Route Handler) before flipping `paid` statuses in Firestore.
+
+## Offline mode
+
+Until Firebase vars exist, storefront hydrates SKU from [`src/lib/default-products.ts`](src/lib/default-products.ts) locally for demos · checkout politely routes to WhatsApp.
+
+## NPM scripts
+
+- `npm run dev` — Turbopack-free dev server scaffolded by CNA.
+- `npm run build` — production bundle.
+- `npm run lint` — eslint.
+
+---
+
+Built with ceremonial intent for luminous metabolisms 💚✨.

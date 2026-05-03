@@ -3,25 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
+  --grain: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), transparent 45%);
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-cream text-botanical-900 font-sans antialiased;
+  background-image: var(--grain);
+}
+
+::selection {
+  background: rgba(201, 162, 77, 0.35);
 }
 
 @layer utilities {
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-soft;
+  }
+
   .text-balance {
     text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
