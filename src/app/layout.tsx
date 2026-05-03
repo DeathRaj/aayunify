@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
+// Triggering production build with fixed linting
 import { brand } from "@/lib/brand";
 import { AppProviders } from "@/components/providers/app-providers";
 
