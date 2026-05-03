@@ -25,7 +25,30 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  // 4. Edge Personalization: Read the wellness goal and attach it as a header
+  // This allows Server Components to read user preferences without client-side flickering.
+  const response = NextResponse.next();
+  const wellnessGoal = request.cookies.get('wellness_goal')?.value;
+  
+  if (wellnessGoal) {
+    // We clone the headers from the request so the route handler sees them
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-user-goal', wellnessGoal);
+    
+    // Future-proofing for ML Scaffold:
+    // If you had a JWT, you could verify it here at the Edge (using jose or similar)
+    // and inject `x-user-id` to pass to a Python ML microservice via API routes.
+    // e.g. requestHeaders.set('x-user-id', verifiedToken.uid);
+
+    return NextResponse.next({
+      request: {
+        // New request headers
+        headers: requestHeaders,
+      },
+    });
+  }
+
+  return response;
 }
 
 export const config = {

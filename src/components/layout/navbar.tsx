@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useMemo, useState, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { brand } from "@/lib/brand";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
@@ -18,10 +18,17 @@ const links = [
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { itemCount } = useCart();
+  const { itemCount, setIsOpen: setDrawerOpen } = useCart();
   const { user, isAdmin, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 50);
+  });
 
   const isAdminShell = pathname?.startsWith("/admin");
 
@@ -42,9 +49,13 @@ export function Navbar() {
       initial={{ opacity: 0, y: -14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="sticky top-0 z-40 border-b border-botanical-900/10 bg-cream/80 backdrop-blur-xl"
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+        scrolled 
+          ? "bg-cream/90 backdrop-blur-xl border-b border-botanical-900/10 shadow-sm" 
+          : "bg-transparent border-transparent"
+      }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-4 sm:px-6 lg:gap-10 lg:px-8">
+      <nav className={`mx-auto flex max-w-7xl items-center gap-6 px-4 transition-all duration-500 sm:px-6 lg:gap-10 lg:px-8 ${scrolled ? "py-4" : "py-6"}`}>
         <Link
           href="/"
           className="font-display text-2xl font-semibold tracking-tight text-botanical-800"
@@ -54,7 +65,9 @@ export function Navbar() {
         </Link>
 
         <form
-          className="hidden flex-1 items-center lg:flex rounded-full bg-white px-5 py-2 shadow-[0_14px_40px_rgba(17,38,36,0.08)] ring-1 ring-botanical-900/10 focus-within:ring-2 focus-within:ring-botanical-500/40 transition"
+          className={`hidden flex-1 items-center lg:flex rounded-full bg-white/80 backdrop-blur px-5 py-2 ring-1 focus-within:ring-2 focus-within:ring-botanical-500/40 transition-all duration-300 ${
+            scrolled ? "shadow-sm ring-botanical-900/10" : "shadow-premium ring-transparent border border-botanical-200/50"
+          }`}
           onSubmit={submitSearch}
         >
           <span className="mr-3 text-botanical-500">⌕</span>
@@ -115,22 +128,23 @@ export function Navbar() {
               Logout
             </button>
           )}
-          <Link
-            href="/cart"
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
             className="rounded-full bg-botanical-800 px-6 py-2 text-xs uppercase tracking-[0.2em] text-cream hover:bg-botanical-700 transition relative"
           >
             Cart
             <span className="ml-3 inline-flex h-6 min-w-[1.75rem] items-center justify-center rounded-full bg-gold-deep text-[11px] text-cream px-2">
               {itemCount}
             </span>
-          </Link>
+          </button>
         </div>
 
         <div className="ml-auto flex items-center gap-3 lg:hidden">
           <button
             type="button"
             className="inline-flex rounded-full bg-botanical-800 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-cream"
-            onClick={() => router.push("/cart")}
+            onClick={() => setDrawerOpen(true)}
             aria-label="Open cart"
           >
             Cart · {itemCount}

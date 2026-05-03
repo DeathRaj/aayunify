@@ -45,6 +45,7 @@ function readStored(): CartLine[] {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLinesState] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setLinesState(readStored());
@@ -93,6 +94,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         };
         return copy;
       });
+      
+      setIsOpen(true); // Open drawer on add
+
       toast.success("Added to your ritual cart", {
         description: `${input.name} · ${qty} item(s)`,
       });
@@ -141,8 +145,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeLine,
       clearCart,
       hydrated,
+      isOpen,
+      setIsOpen,
     };
-  }, [lines, addToCart, setQty, removeLine, clearCart, hydrated]);
+  }, [lines, addToCart, setQty, removeLine, clearCart, hydrated, isOpen]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -6,10 +6,10 @@ export function WhyChooseUs() {
     <section className="relative mt-32 overflow-hidden rounded-[40px] border border-botanical-100 bg-gradient-to-br from-botanical-800 via-botanical-700 to-botanical-600 px-6 py-20 text-cream lg:py-24">
       <div className="pointer-events-none absolute inset-0">
         <Image
-          src="https://images.unsplash.com/photo-1524592094714-0f0654ae203e?q=80&w=1800&auto=format&fit=crop"
-          alt=""
+          src="/images/raw-ingredient.png"
+          alt="Raw Ayurvedic Ingredients"
           fill
-          className="object-cover opacity-[0.18]"
+          className="object-cover opacity-20"
           loading="lazy"
           sizes="100vw"
           aria-hidden

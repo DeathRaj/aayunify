@@ -150,138 +150,154 @@ export function CheckoutPageClient() {
 
       <div className="mt-16 grid gap-12 lg:grid-cols-[1.05fr_minmax(0,0.92fr)]">
         <form className="space-y-10" onSubmit={submitOrder}>
-          <fieldset className="rounded-[40px] border border-botanical-100 bg-white/95 backdrop-blur space-y-6 px-8 py-10 shadow-soft">
+          <fieldset className="rounded-[2.5rem] border border-botanical-100 bg-white shadow-premium p-8 lg:p-10 transition-all duration-300 focus-within:border-botanical-300">
             <legend className="sr-only">Customer dossier</legend>
-            <h2 className="text-xs uppercase tracking-[0.44em] text-botanical-500">Custodian dossier</h2>
-            <label className="block space-y-2">
-              <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">Full ceremonial name*</span>
-              <input
-                required
-                className="w-full rounded-3xl border border-botanical-200 px-6 py-3 bg-transparent outline-none focus:ring-2 focus:ring-botanical-600/40"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="flex items-center gap-4 mb-8">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-botanical-50 text-[10px] font-bold text-botanical-800">1</span>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] text-botanical-800">Custodian Details</h2>
+            </div>
+            <div className="space-y-6">
               <label className="block space-y-2">
-                <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">Email</span>
-                <input
-                  type="email"
-                  className="w-full rounded-3xl border border-botanical-200 px-6 py-3 bg-transparent outline-none focus:ring-2 focus:ring-botanical-600/40"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </label>
-              <label className="block space-y-2">
-                <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">Phone / WhatsApp*</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">Full Name *</span>
                 <input
                   required
-                  inputMode="tel"
-                  className="w-full rounded-3xl border border-botanical-200 px-6 py-3 bg-transparent outline-none focus:ring-2 focus:ring-botanical-600/40"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Ritika Sharma"
                 />
               </label>
+              <div className="grid gap-6 md:grid-cols-2">
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">Email Address</span>
+                  <input
+                    type="email"
+                    className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="For order tracking"
+                  />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">WhatsApp / Phone *</span>
+                  <input
+                    required
+                    inputMode="tel"
+                    className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+91..."
+                  />
+                </label>
+              </div>
             </div>
           </fieldset>
 
-          <fieldset className="rounded-[40px] border border-botanical-100 bg-white/95 backdrop-blur space-y-6 px-8 py-10 shadow-soft">
+          <fieldset className="rounded-[2.5rem] border border-botanical-100 bg-white shadow-premium p-8 lg:p-10 transition-all duration-300 focus-within:border-botanical-300">
             <legend className="sr-only">Delivery coordinates</legend>
-            <h2 className="text-xs uppercase tracking-[0.44em] text-botanical-500">Delivery choreography</h2>
-            <label className="block space-y-2">
-              <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">Line 1*</span>
-              <input
-                required
-                className="w-full rounded-3xl border border-botanical-200 px-6 py-3 outline-none focus:ring-2 focus:ring-botanical-600/40"
-                value={line1}
-                onChange={(e) => setLine1(e.target.value)}
-                placeholder="Street, gated community clues"
-              />
-            </label>
-            <label className="block space-y-2">
-              <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">Line 2</span>
-              <input
-                className="w-full rounded-3xl border border-botanical-200 px-6 py-3 outline-none focus:ring-2 focus:ring-botanical-600/40"
-                value={line2}
-                onChange={(e) => setLine2(e.target.value)}
-                placeholder="Floor, concierge notes"
-              />
-            </label>
-            <div className="grid gap-6 md:grid-cols-3">
-              <label className="space-y-2 md:col-span-1 block">
-                <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">City*</span>
+            <div className="flex items-center gap-4 mb-8">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-botanical-50 text-[10px] font-bold text-botanical-800">2</span>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] text-botanical-800">Delivery Address</h2>
+            </div>
+            <div className="space-y-6">
+              <label className="block space-y-2">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">Street Address *</span>
                 <input
                   required
-                  className="w-full rounded-3xl border border-botanical-200 px-6 py-3 outline-none focus:ring-2 focus:ring-botanical-600/40"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                  value={line1}
+                  onChange={(e) => setLine1(e.target.value)}
+                  placeholder="House number, Street name"
                 />
               </label>
-              <label className="space-y-2 block">
-                <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">State*</span>
+              <label className="block space-y-2">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">Apartment / Suite</span>
                 <input
-                  required
-                  className="w-full rounded-3xl border border-botanical-200 px-6 py-3 outline-none focus:ring-2 focus:ring-botanical-600/40"
-                  value={stateRegion}
-                  onChange={(e) => setStateRegion(e.target.value)}
+                  className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                  value={line2}
+                  onChange={(e) => setLine2(e.target.value)}
+                  placeholder="Optional"
                 />
               </label>
-              <label className="space-y-2 block">
-                <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">PIN*</span>
-                <input
-                  required
-                  className="w-full rounded-3xl border border-botanical-200 px-6 py-3 outline-none focus:ring-2 focus:ring-botanical-600/40"
-                  value={postal}
-                  onChange={(e) => setPostal(e.target.value)}
-                />
-              </label>
-              <label className="md:col-span-3 space-y-2 block">
-                <span className="text-xs uppercase tracking-[0.36em] text-botanical-500">Nation*</span>
-                <select
-                  className="w-full rounded-3xl border border-botanical-200 px-6 py-3 outline-none focus:ring-2 focus:ring-botanical-600/40 bg-transparent"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                >
-                  <option>India</option>
-                  <option>United Kingdom</option>
-                  <option>United States</option>
-                </select>
-              </label>
+              <div className="grid gap-6 md:grid-cols-3">
+                <label className="space-y-2 md:col-span-1 block">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">City *</span>
+                  <input
+                    required
+                    className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </label>
+                <label className="space-y-2 block">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">State *</span>
+                  <input
+                    required
+                    className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                    value={stateRegion}
+                    onChange={(e) => setStateRegion(e.target.value)}
+                  />
+                </label>
+                <label className="space-y-2 block">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">PIN Code *</span>
+                  <input
+                    required
+                    className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all"
+                    value={postal}
+                    onChange={(e) => setPostal(e.target.value)}
+                  />
+                </label>
+                <label className="md:col-span-3 space-y-2 block">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">Country *</span>
+                  <select
+                    className="w-full rounded-2xl border border-botanical-100 px-6 py-4 bg-botanical-50/30 outline-none focus:border-botanical-400 focus:bg-white focus:ring-4 focus:ring-botanical-100 transition-all appearance-none"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                  >
+                    <option>India</option>
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                  </select>
+                </label>
+              </div>
             </div>
           </fieldset>
 
-          <fieldset className="rounded-[40px] border border-botanical-100 bg-white/95 backdrop-blur space-y-6 px-8 py-10 shadow-soft">
+          <fieldset className="rounded-[2.5rem] border border-botanical-100 bg-white shadow-premium p-8 lg:p-10 transition-all duration-300 focus-within:border-botanical-300">
             <legend className="sr-only">Payment orbit</legend>
-            <h2 className="text-xs uppercase tracking-[0.44em] text-botanical-500 mb-6">Settlement orbit · India-first rails</h2>
-            <div className="space-y-5">
-              <label className="flex gap-4 rounded-[28px] border border-botanical-100 px-6 py-4">
-                <input type="radio" name="payment" checked={paymentMethod === "upi"} onChange={() => setPaymentMethod("upi")} />
-                <div className="space-y-3">
-                  <strong className="block text-lg leading-tight text-botanical-900">UPI (QR / Razorpay handoff)</strong>
-                  <p className="text-sm leading-relaxed text-botanical-600">
-                    We’ll confirm via WhatsApp with a Razorpay or bank-linked QR instantly after checkout.
+            <div className="flex items-center gap-4 mb-8">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-botanical-50 text-[10px] font-bold text-botanical-800">3</span>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] text-botanical-800">Settlement Orbit</h2>
+            </div>
+            <div className="space-y-4">
+              <label className="flex gap-5 rounded-3xl border border-botanical-100 p-6 transition-all hover:bg-botanical-50/50 cursor-pointer has-[:checked]:border-botanical-500 has-[:checked]:bg-botanical-50/50 has-[:checked]:ring-1 has-[:checked]:ring-botanical-500">
+                <input type="radio" name="payment" checked={paymentMethod === "upi"} onChange={() => setPaymentMethod("upi")} className="mt-1 text-botanical-600 focus:ring-botanical-500" />
+                <div className="space-y-2">
+                  <strong className="block text-[15px] font-semibold tracking-tight text-botanical-900">UPI (QR / Razorpay)</strong>
+                  <p className="text-sm leading-relaxed text-botanical-600/90">
+                    Instant and secure via any UPI app.
                   </p>
                 </div>
               </label>
 
-              <label className="flex gap-4 rounded-[28px] border border-botanical-100 px-6 py-4">
-                <input type="radio" name="payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
-                <div className="space-y-3">
-                  <strong className="block text-lg leading-tight text-botanical-900">Cash on delivery</strong>
-                  <p className="text-sm leading-relaxed text-botanical-600">
-                    Concierge verifies availability + ₹COD handling nuances over WhatsApp.
+              <label className="flex gap-5 rounded-3xl border border-botanical-100 p-6 transition-all hover:bg-botanical-50/50 cursor-pointer has-[:checked]:border-botanical-500 has-[:checked]:bg-botanical-50/50 has-[:checked]:ring-1 has-[:checked]:ring-botanical-500">
+                <input type="radio" name="payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} className="mt-1 text-botanical-600 focus:ring-botanical-500" />
+                <div className="space-y-2">
+                  <strong className="block text-[15px] font-semibold tracking-tight text-botanical-900">Cash on delivery</strong>
+                  <p className="text-sm leading-relaxed text-botanical-600/90">
+                    Pay when your ritual arrives.
                   </p>
                 </div>
               </label>
 
-              <label className="flex gap-4 rounded-[28px] border border-botanical-100 px-6 py-4">
-                <input type="radio" name="payment" checked={paymentMethod === "whatsapp"} onChange={() => setPaymentMethod("whatsapp")} />
+              <label className="flex gap-5 rounded-3xl border border-botanical-100 p-6 transition-all hover:bg-botanical-50/50 cursor-pointer has-[:checked]:border-botanical-500 has-[:checked]:bg-botanical-50/50 has-[:checked]:ring-1 has-[:checked]:ring-botanical-500">
+                <input type="radio" name="payment" checked={paymentMethod === "whatsapp"} onChange={() => setPaymentMethod("whatsapp")} className="mt-1 text-botanical-600 focus:ring-botanical-500" />
                 <div className="w-full space-y-4">
-                  <strong className="block text-lg leading-tight text-botanical-900">WhatsApp-guided order desk</strong>
-                  <p className="text-sm leading-relaxed text-botanical-600">
-                    Prefer human orchestration · bundles · gifting choreography.
+                  <strong className="block text-[15px] font-semibold tracking-tight text-botanical-900">WhatsApp Concierge</strong>
+                  <p className="text-sm leading-relaxed text-botanical-600/90">
+                    Need a custom bundle or gifting help? Let's talk.
                   </p>
-                  <WhatsAppButton variant="outline" />
+                  {paymentMethod === "whatsapp" && <WhatsAppButton variant="outline" className="w-full mt-2" />}
                 </div>
               </label>
             </div>
@@ -289,60 +305,79 @@ export function CheckoutPageClient() {
 
           <button
             type="submit"
-            className="rounded-full bg-botanical-800 px-12 py-[0.95rem] text-xs uppercase tracking-[0.38em] text-cream hover:bg-botanical-700 transition shadow-soft"
+            className="group relative overflow-hidden flex w-full items-center justify-center rounded-full bg-botanical-800 px-12 py-[1.125rem] text-xs font-bold uppercase tracking-[0.2em] text-cream shadow-premium transition-all hover:scale-[1.01] hover:bg-botanical-900"
           >
-            Confirm sacred order · {paymentMethod.toUpperCase()} · {currency(payable)}
+            <span className="relative z-10 flex items-center gap-3">
+              Confirm Order · {currency(payable)} <span className="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+            <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
           </button>
+          
+          <div className="flex justify-center gap-6 opacity-60">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-botanical-700">🔒 Secure Checkout</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-botanical-700">✓ Lab Verified</span>
+          </div>
         </form>
 
-        <aside className="h-fit lg:sticky lg:top-32 space-y-6 rounded-[40px] border border-botanical-100 bg-botanical-800 px-8 py-10 text-white shadow-soft">
+        <aside className="h-fit lg:sticky lg:top-32 space-y-8 rounded-[2.5rem] border border-botanical-100 bg-white/60 backdrop-blur-xl px-8 py-10 shadow-premium">
           <header>
-            <p className="text-xs uppercase tracking-[0.48em] text-gold-deep">Order tableau</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-botanical-800 border-b border-botanical-100 pb-4">Order Summary</p>
           </header>
-          <ul className="space-y-3 text-[13px] uppercase tracking-[0.18em] text-white/85">
+          
+          <ul className="space-y-4 text-[13px] font-medium text-botanical-800/90 max-h-[30vh] overflow-y-auto pr-2 custom-scrollbar">
             {lines.map((line) => (
-              <li key={line.productId} className="flex justify-between gap-6 leading-relaxed">
-                <span>
-                  {line.name} × {line.quantity}
+              <li key={line.productId} className="flex justify-between gap-6 leading-relaxed items-center">
+                <span className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-botanical-50 text-[10px] font-bold text-botanical-700">{line.quantity}</span>
+                  {line.name}
                 </span>
-                <span>{currency(line.price * line.quantity)}</span>
+                <span className="font-semibold">{currency(line.price * line.quantity)}</span>
               </li>
             ))}
           </ul>
 
-          <label className="space-y-2 text-[11px] uppercase tracking-[0.38em] text-white/65">
-            Coupon reliquary
-            <input
-              className="mt-4 w-full rounded-full border border-white/30 bg-white px-6 py-3 text-botanical-800 outline-none"
-              value={coupon}
-              onChange={(e) => setCoupon(e.target.value.toUpperCase())}
-              placeholder="Try AAYU10"
-            />
-          </label>
+          <div className="pt-6 border-t border-botanical-100">
+            <label className="space-y-3 block">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-botanical-500">Gift Card or Discount Code</span>
+              <div className="flex gap-2">
+                <input
+                  className="w-full rounded-full border border-botanical-200 px-5 py-3 text-sm outline-none focus:border-botanical-400 focus:ring-2 focus:ring-botanical-100 transition-all bg-white"
+                  value={coupon}
+                  onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                  placeholder="e.g. AAYU10"
+                />
+                <button type="button" className="px-6 py-3 rounded-full bg-botanical-50 text-botanical-800 text-[10px] font-bold uppercase tracking-widest hover:bg-botanical-100 transition-colors">Apply</button>
+              </div>
+            </label>
+          </div>
 
-          <dl className="space-y-3 pt-6 text-[11px] uppercase tracking-[0.25em] text-white/85">
-            <div className="flex justify-between text-white/70">
-              <dt>Merchandise</dt>
+          <dl className="space-y-4 pt-6 text-[13px] font-medium text-botanical-800/80">
+            <div className="flex justify-between">
+              <dt>Subtotal</dt>
               <dd>{currency(subtotal)}</dd>
             </div>
-            <div className="flex justify-between text-emerald-200">
-              <dt>Offering</dt>
-              <dd>- {currency(discount)}</dd>
+            {discount > 0 && (
+              <div className="flex justify-between text-botanical-600">
+                <dt>Discount</dt>
+                <dd>- {currency(discount)}</dd>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <dt>Shipping</dt>
+              <dd className="text-[11px] uppercase tracking-wider text-botanical-500">Calculated at next step</dd>
             </div>
-            <hr className="border-white/30" />
-            <div className="flex items-baseline justify-between gap-10 pt-6">
-              <dt className="text-xs uppercase tracking-[0.32em] text-white/65">Ceremonial Total</dt>
-              <dd className="font-display text-4xl">{currency(payable)}</dd>
+            <div className="pt-6 border-t border-botanical-100 flex items-baseline justify-between gap-10">
+              <dt className="text-[11px] font-bold uppercase tracking-[0.2em] text-botanical-500">Total</dt>
+              <dd className="font-display text-4xl text-botanical-900 tracking-tight">{currency(payable)}</dd>
             </div>
           </dl>
 
-          <WhatsAppButton variant="outline" className="w-full border-white/65 text-white" label="Concierge WhatsApp" />
-          <a className="block text-[11px] uppercase tracking-[0.33em] text-center text-white/70" href={waUrl}>
-            Compose WhatsApp with cart tableau
-          </a>
-          <p className="text-[11px] leading-snug text-white/70">
-            Before enabling card payments publicly, finalize Razorpay order creation via a secured route handler · verify signatures Cloud-side (`see README`).
-          </p>
+          <div className="pt-6 border-t border-botanical-100 space-y-4">
+            <WhatsAppButton variant="outline" className="w-full justify-center" label="Need help? WhatsApp Us" />
+            <p className="text-[10px] text-center leading-relaxed text-botanical-500 max-w-xs mx-auto">
+              By placing your order, you agree to our Terms of Service and Privacy Policy.
+            </p>
+          </div>
         </aside>
       </div>
     </div>
