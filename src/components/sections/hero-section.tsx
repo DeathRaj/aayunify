@@ -13,10 +13,10 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
 // `ssr: false` ensures Three.js never runs on the server.
 // `loading: () => null` means zero layout shift during load — the canvas
 // is absolutely positioned so it has no effect on document flow.
-const AntigravityHero = dynamic(
+const HeroWebGL = dynamic(
   () =>
-    import("@/components/sections/antigravity-hero").then((mod) => ({
-      default: mod.AntigravityHero,
+    import("@/components/sections/hero-webgl").then((mod) => ({
+      default: mod.HeroWebGL,
     })),
   { ssr: false, loading: () => null },
 );
@@ -65,7 +65,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden rounded-[32px] border border-botanical-100 bg-gradient-to-br from-botanical-50 via-cream to-parchment px-6 py-16 lg:px-20 lg:py-24 sm:py-20 shadow-premium">
       {/* WebGL Antigravity Layer — lazy loaded, suspended when off-screen */}
-      <AntigravityHero />
+      <HeroWebGL />
 
       <div className="relative mx-auto grid max-w-[85rem] gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20 items-center">
         <motion.div

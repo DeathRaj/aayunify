@@ -13,7 +13,7 @@ AayuUnify is a premium, high-conversion D2C e-commerce platform built for a luxu
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) | Utility-first CSS with a custom design system and tokens. |
 | **3D Engine** | [Three.js](https://threejs.org/) | WebGL-powered 3D graphics in the Hero section. |
 | **3D Bridge** | [@react-three/fiber](https://r3f.docs.pmnd.rs/) | Declarative Three.js components for React. |
-| **3D Utils** | [@react-three/drei](https://github.com/pmndrs/drei) | Helpers for transmission, shadows, adaptive resolution, and scroll-linked animation. |
+| **3D Utils** | [@react-three/drei](https://github.com/pmndrs/drei) | Helpers for shadows, adaptive resolution, and preloading. |
 | **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth fade-ups, staggered lists, and interactive transitions. |
 | **Database** | [Firebase Firestore](https://firebase.google.com/products/firestore) | NoSQL real-time database for products and orders. |
 | **Auth** | [Firebase Auth](https://firebase.google.com/products/auth) | Secure admin access and user identification. |
@@ -41,8 +41,7 @@ The design philosophy focuses on **"Luminous Wellness"** — clean, spacious, an
 - **Glassmorphism**: Backdrop blurs (`backdrop-blur-xl`) on navigation bars and floating pills.
 - **Magnetic Buttons**: Custom interactive buttons that "pull" towards the cursor with strategic `will-change` layer promotion during interaction.
 - **Shimmer Effects**: Animated gradient overlays on primary buttons to guide user attention.
-- **Luminous Glass**: Custom WebGL shaders utilizing `MeshTransmissionMaterial`. Parameters include high-quality transmission (`transmission: 1`), physical thickness (`thickness: 1.2`), and chromatic aberration (`0.06`) to simulate realistic light splitting.
-- **Cinematic Lighting**: A multi-layered lighting setup including an `Environment` map (preset: "forest") for realistic reflections, a high-penumbra `SpotLight` for soft shadows, and a mint-tinted `PointLight` for botanical color bleeding.
+- **Luminous Glass**: Custom WebGL shaders using `MeshTransmissionMaterial` for realistic light refraction on product bottles.
 
 ---
 
@@ -52,10 +51,9 @@ The platform is engineered for a flawless, lag-free experience on both mobile an
 
 ### 1. Adaptive WebGL Layer
 The **Antigravity Hero** uses a sophisticated render-suspension and scaling system:
-- **Render Suspension**: The 3D `<Canvas>` automatically unmounts when the hero section scrolls out of view (using `framer-motion`'s `useInView`), reclaiming 100% of GPU resources and VRAM.
-- **Performance Monitor**: Real-time FPS monitoring via `@react-three/drei`'s `PerformanceMonitor`. It dynamically scales the Device Pixel Ratio (DPR) between `0.5` and `1.5` based on GPU headroom and frame stability.
-- **Mobile Degradation**: If a device cannot sustain 30fps after a strict 3-second monitoring window, the WebGL layer is replaced by a graceful, CSS-animated WebP fallback image.
-- **Modular Scene Architecture**: The scene is decoupled into `LuminousBottle` and `LuminousJar` components, allowing for independent optimization of polygon counts and material complexity based on the device profile.
+- **Render Suspension**: The 3D `<Canvas>` automatically unmounts when the hero section scrolls out of view, reclaiming 100% of GPU resources and VRAM.
+- **Performance Monitor**: Real-time FPS monitoring via `@react-three/drei`'s `PerformanceMonitor`. It dynamically scales the Device Pixel Ratio (DPR) between `0.5` and `1.5` based on GPU headroom.
+- **Mobile Degradation**: If a device cannot sustain 30fps after 3 seconds of monitoring, the WebGL layer is replaced by a CSS-animated WebP fallback to ensure a smooth scrolling experience.
 
 ### 2. Optimized State Architecture
 The cart system was refactored into a **Split Context Architecture**:
