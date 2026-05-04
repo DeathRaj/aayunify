@@ -163,7 +163,7 @@ function WebGLLayer({ isMobile }: SceneProps) {
   return (
     <>
       {/* Cinematic Lighting */}
-      <Environment preset="forest" />
+      <Environment preset="city" />
       <ambientLight intensity={0.2} />
       <spotLight 
         position={[10, 10, 10]} 
@@ -222,7 +222,7 @@ function CSSFallback() {
           src="/images/hero-webgl-fallback.webp"
           alt=""
           fill
-          className="object-cover animate-pulse-slow"
+          className="object-cover webgl-float-fallback"
           priority={false}
           sizes="100vw"
         />
