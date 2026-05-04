@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, Suspense, useState, useCallback, useMemo } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Float,
   ContactShadows,
@@ -163,7 +163,7 @@ function WebGLLayer({ isMobile }: SceneProps) {
   return (
     <>
       {/* Cinematic Lighting */}
-      <Environment preset="city" />
+      <Environment preset="forest" />
       <ambientLight intensity={0.2} />
       <spotLight 
         position={[10, 10, 10]} 
@@ -222,7 +222,7 @@ function CSSFallback() {
           src="/images/hero-webgl-fallback.webp"
           alt=""
           fill
-          className="object-cover webgl-float-fallback"
+          className="object-cover animate-pulse-slow"
           priority={false}
           sizes="100vw"
         />
