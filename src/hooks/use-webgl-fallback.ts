@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 
 const FPS_THRESHOLD = 30;      // Below this → trigger fallback
-const WARM_UP_MS    = 2_000;   // Wait 2s before judging (scene needs to load)
-const SAMPLE_WINDOW = 3_000;   // Measure over a 3s rolling window
+const WARM_UP_MS    = 500;     // Brief 0.5s warm-up to allow Canvas initialization
+const SAMPLE_WINDOW = 3_000;   // Measure over a strict 3s monitoring window as requested
 
 /**
  * Monitors real rendered FPS via requestAnimationFrame.

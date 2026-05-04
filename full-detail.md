@@ -13,7 +13,7 @@ AayuUnify is a premium, high-conversion D2C e-commerce platform built for a luxu
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) | Utility-first CSS with a custom design system and tokens. |
 | **3D Engine** | [Three.js](https://threejs.org/) | WebGL-powered 3D graphics in the Hero section. |
 | **3D Bridge** | [@react-three/fiber](https://r3f.docs.pmnd.rs/) | Declarative Three.js components for React. |
-| **3D Utils** | [@react-three/drei](https://github.com/pmndrs/drei) | Helpers for shadows, floating effects, and preloading. |
+| **3D Utils** | [@react-three/drei](https://github.com/pmndrs/drei) | Helpers for shadows, adaptive resolution, and preloading. |
 | **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth fade-ups, staggered lists, and interactive transitions. |
 | **Database** | [Firebase Firestore](https://firebase.google.com/products/firestore) | NoSQL real-time database for products and orders. |
 | **Auth** | [Firebase Auth](https://firebase.google.com/products/auth) | Secure admin access and user identification. |
@@ -34,21 +34,43 @@ The design philosophy focuses on **"Luminous Wellness"** — clean, spacious, an
 - **Parchment (#f0eadd)**: Used for secondary sections and subtle depth.
 
 ### 2. Typography
-- **Display**: *Cormorant Garamond* (Serif) — Elegant, traditional, and high-end. Used for headings.
+- **Display**: *Cormorant Garamond* (Serif) — Elegant, traditional, and high-end. Headings use explicit font-metric matching fallbacks to eliminate Layout Shift (CLS).
 - **Body**: *DM Sans* (Sans-serif) — Modern, highly readable, and clean. Used for UI and descriptions.
 
 ### 3. Visual Effects
 - **Glassmorphism**: Backdrop blurs (`backdrop-blur-xl`) on navigation bars and floating pills.
-- **Magnetic Buttons**: Custom interactive buttons that "pull" towards the cursor for a tactile feel.
+- **Magnetic Buttons**: Custom interactive buttons that "pull" towards the cursor with strategic `will-change` layer promotion during interaction.
 - **Shimmer Effects**: Animated gradient overlays on primary buttons to guide user attention.
-- **Soft Shadows**: Custom `shadow-premium` tokens for subtle elevation without clutter.
+- **Luminous Glass**: Custom WebGL shaders using `MeshTransmissionMaterial` for realistic light refraction on product bottles.
+
+---
+
+## ⚡ Performance Engineering (60fps Refactor)
+
+The platform is engineered for a flawless, lag-free experience on both mobile and high-end desktop displays.
+
+### 1. Adaptive WebGL Layer
+The **Antigravity Hero** uses a sophisticated render-suspension and scaling system:
+- **Render Suspension**: The 3D `<Canvas>` automatically unmounts when the hero section scrolls out of view, reclaiming 100% of GPU resources and VRAM.
+- **Performance Monitor**: Real-time FPS monitoring via `@react-three/drei`'s `PerformanceMonitor`. It dynamically scales the Device Pixel Ratio (DPR) between `0.5` and `1.5` based on GPU headroom.
+- **Mobile Degradation**: If a device cannot sustain 30fps after 3 seconds of monitoring, the WebGL layer is replaced by a CSS-animated WebP fallback to ensure a smooth scrolling experience.
+
+### 2. Optimized State Architecture
+The cart system was refactored into a **Split Context Architecture**:
+- **CartDataContext**: Manages items and business logic.
+- **CartUIContext**: Manages drawer open/close states.
+- **Benefit**: Toggling the cart drawer no longer triggers re-renders of the entire product grid or navigation bar, solving an O(N) re-render bottleneck.
+
+### 3. GPU-Composited Scrolling
+- **Reflow Elimination**: Replaced legacy `background-attachment: fixed` (which kills mobile scroll performance) with a `position: fixed` pseudo-element.
+- **Layer Promotion**: Strategic use of `will-change: transform` on heavy components (Cart Drawer, Magnetic Buttons) to ensure they reside on their own GPU compositor layers.
 
 ---
 
 ## ✨ Core Features
 
 ### 💎 Interactive Hero Experience
-The landing page features a **WebGL Antigravity Layer**. 3D Ayurvedic bottles and jars float in the background, reacting dynamically to the user's scroll position. This is optimized for performance using low-poly geometries and adaptive DPR (Device Pixel Ratio).
+The landing page features a **WebGL Antigravity Layer**. 3D Ayurvedic bottles and jars float in the background, reacting dynamically to the user's scroll position.
 
 ### 🛒 Ritual Shopping Cart
 - **Persistent State**: Cart items are saved to local storage, ensuring no progress is lost.
@@ -59,7 +81,7 @@ The landing page features a **WebGL Antigravity Layer**. 3D Ayurvedic bottles an
 ### 🔐 Ceremonial Checkout
 Tailored for the Indian market:
 - **Payment Methods**: Native support for **UPI**, **Cash on Delivery (COD)**, and **WhatsApp Concierge**.
-- **WhatsApp Orchestration**: After placing an order, users are redirected to WhatsApp with a pre-filled, formatted message. This acts as an instant notification for the admin and a confirmation for the user.
+- **WhatsApp Orchestration**: After placing an order, users are redirected to WhatsApp with a pre-filled, formatted message.
 - **Firestore Fidelity**: Orders are persisted to Firebase for record-keeping and admin management.
 
 ### 🛠 Admin Ceremonial Desk
@@ -69,17 +91,18 @@ A secure dashboard for store management:
 
 ---
 
-## 📈 Performance & SEO
-- **Optimized Assets**: Uses `next/image` for WebP conversion and lazy loading.
+## 📈 SEO & Accessibility
+- **CLS 0.0**: Precise font preloading and metric matching eliminate layout shifts.
+- **LCP Optimization**: Critical assets (Hero image, fonts) are preloaded; heavy 3D bundles are lazy-loaded via `next/dynamic`.
+- **Accessibility**: Support for `prefers-reduced-motion` across all Framer Motion interactions.
 - **Semantic HTML**: Proper heading hierarchies and ARIA labels for accessibility.
-- **Metadata**: Dynamic OpenGraph and Twitter card generation for premium social sharing.
-- **WebGL Optimization**: Disabled antialiasing and stencil buffers on mobile to ensure 60fps on most devices.
 
 ---
 
 ## 📁 Project Structure
 - `/src/app`: Next.js 14 App Router (Routes & Layouts).
-- `/src/components`: UI components (Shadcn-like structure but vanilla-styled).
-- `/src/context`: React Context for Cart and Auth state management.
-- `/src/lib`: Core logic (Firebase, WhatsApp URL builders, brand constants).
-- `/public`: Static assets, images, and fonts.
+- `/src/components`: UI components organized by feature (catalog, checkout, sections).
+- `/src/context`: Split state management (Cart Data vs UI).
+- `/src/hooks`: Custom hooks for mobile detection, FPS monitoring, and debouncing.
+- `/src/lib`: Core logic (Firebase, WhatsApp builders, brand constants).
+- `/public`: Optimized WebP images and localized assets.
