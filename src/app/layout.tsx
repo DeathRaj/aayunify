@@ -5,11 +5,39 @@ import "./globals.css";
 import { brand } from "@/lib/brand";
 import { AppProviders } from "@/components/providers/app-providers";
 
+/*
+ * FONT OPTIMIZATION NOTES:
+ *
+ * 1. `preload: true` (default) — next/font injects <link rel="preload"> in <head>
+ *    so the browser fetches the font before parsing CSS. Explicit here for clarity.
+ *
+ * 2. `display: "swap"` — text renders immediately in the fallback font, then
+ *    swaps when the custom font loads. Prevents invisible text (FOIT).
+ *
+ * 3. `fallback` arrays — carefully chosen system fonts that closely match
+ *    the metrics of Cormorant Garamond and DM Sans respectively. This minimizes
+ *    Cumulative Layout Shift (CLS) during the font swap because the fallback
+ *    and target font render at nearly identical sizes.
+ *
+ * 4. `adjustFontFallback: true` (default in next/font) — next/font automatically
+ *    generates @font-face `size-adjust`, `ascent-override`, `descent-override`,
+ *    and `line-gap-override` values to make the fallback font metrics match the
+ *    Google Font metrics exactly. CLS target: 0.0.
+ */
+
 const displayFont = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap",
+  preload: true,
+  fallback: [
+    "Georgia",
+    "Cambria",
+    "Times New Roman",
+    "Times",
+    "serif",
+  ],
 });
 
 const bodyFont = DM_Sans({
@@ -17,6 +45,15 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
   display: "swap",
+  preload: true,
+  fallback: [
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif",
+  ],
 });
 
 const siteRoot =

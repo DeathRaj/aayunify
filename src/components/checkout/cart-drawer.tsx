@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useCart } from "@/context/cart-context";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useCartData, useCartUI } from "@/context/cart-context";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -14,28 +14,54 @@ function currency(amount: number) {
 }
 
 export function CartDrawer() {
-  const { lines, subtotal, isOpen, setIsOpen, removeLine, setQty } = useCart();
+  // Split context consumption — data changes don't re-render when drawer toggles
+  const { lines, subtotal, removeLine, setQty } = useCartData();
+  const { isOpen, setIsOpen } = useCartUI();
   const router = useRouter();
+  const prefersReducedMotion = useReducedMotion();
+
+  // Drawer animation: transforms only (translateX) — GPU composited
+  const drawerVariants = {
+    hidden: { x: "100%" },
+    visible: { x: 0 },
+    exit: { x: "100%" },
+  };
+
+  // Instant snap when user prefers reduced motion
+  const drawerTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, damping: 25, stiffness: 200 };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — opacity only, GPU composited
+           *  will-change: opacity is justified here — this element always
+           *  animates in/out as a single heavy full-screen overlay */}
           <motion.div
+            key="cart-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
             onClick={() => setIsOpen(false)}
+            style={{ willChange: "opacity" }}
             className="fixed inset-0 z-[60] bg-botanical-900/40 backdrop-blur-sm"
           />
 
-          {/* Drawer */}
+          {/* Drawer — translateX only, GPU composited
+           *  will-change: transform is permanent here because this element
+           *  always exits with a transform animation — justified for a
+           *  single, full-height panel with high animation frequency */}
           <motion.aside
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            key="cart-drawer"
+            variants={drawerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={drawerTransition}
+            style={{ willChange: "transform" }}
             className="fixed right-0 top-0 z-[70] h-full w-full max-w-md bg-cream shadow-2xl flex flex-col"
           >
             <header className="px-8 py-6 border-b border-botanical-100 flex items-center justify-between bg-white">
@@ -43,12 +69,13 @@ export function CartDrawer() {
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 hover:bg-botanical-50 rounded-full transition-colors"
+                aria-label="Close cart"
               >
                 ✕
               </button>
             </header>
 
-            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-10">
+            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-10 no-scrollbar">
               {lines.length === 0 ? (
                 <div className="text-center py-20 space-y-6">
                   <p className="text-botanical-500 uppercase tracking-widest text-xs">Apothecary is empty</p>
@@ -87,6 +114,7 @@ export function CartDrawer() {
                               <button
                                 onClick={() => setQty(line.productId, line.quantity - 1)}
                                 className="p-1 px-2 text-botanical-500 hover:text-botanical-900"
+                                aria-label="Decrease quantity"
                               >
                                 −
                               </button>
@@ -94,6 +122,7 @@ export function CartDrawer() {
                               <button
                                 onClick={() => setQty(line.productId, line.quantity + 1)}
                                 className="p-1 px-2 text-botanical-500 hover:text-botanical-900"
+                                aria-label="Increase quantity"
                               >
                                 +
                               </button>
@@ -105,23 +134,18 @@ export function CartDrawer() {
                     ))}
                   </div>
 
-                  {/* Frequently Bought Together / Bundling Logic */}
+                  {/* Upsell / Bundle */}
                   <div className="pt-8 border-t border-botanical-100/50">
                     <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-botanical-400 mb-6">Complete your Ritual</h4>
                     <div className="rounded-3xl bg-botanical-50/50 border border-botanical-100 p-6 flex gap-5 items-center">
                       <div className="relative h-16 w-16 flex-shrink-0 rounded-xl overflow-hidden bg-white shadow-sm">
-                        <Image
-                          src="/images/bundle-orbit.png"
-                          alt="Bundle"
-                          fill
-                          className="object-cover"
-                        />
+                        <Image src="/images/bundle-orbit.png" alt="Bundle" fill className="object-cover" />
                       </div>
                       <div className="flex-1 space-y-1">
                         <p className="text-xs font-bold text-botanical-900 uppercase tracking-tight">The Luminous Bundle</p>
-                        <p className="text-[10px] text-botanical-500 leading-tight">Combine Moringa & ACV for peak metabolic harmony.</p>
+                        <p className="text-[10px] text-botanical-500 leading-tight">Combine Moringa &amp; ACV for peak metabolic harmony.</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => router.push("/shop")}
                         className="bg-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest border border-botanical-200 hover:bg-botanical-800 hover:text-white transition-all shadow-sm"
                       >

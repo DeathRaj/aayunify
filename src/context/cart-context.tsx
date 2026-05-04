@@ -15,7 +15,9 @@ import type { CartLine } from "@/types";
 
 const STORAGE_KEY = "aayunify-cart-v1";
 
-type CartCtx = {
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type CartDataCtx = {
   lines: CartLine[];
   itemCount: number;
   subtotal: number;
@@ -23,13 +25,20 @@ type CartCtx = {
   setQty: (productId: string, qty: number) => void;
   removeLine: (productId: string) => void;
   clearCart: () => void;
-  /** For optimistic UI */
   hydrated: boolean;
+};
+
+type CartUICtx = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 };
 
-const CartContext = createContext<CartCtx | null>(null);
+// ─── Contexts ─────────────────────────────────────────────────────────────────
+
+const CartDataContext = createContext<CartDataCtx | null>(null);
+const CartUIContext   = createContext<CartUICtx | null>(null);
+
+// ─── localStorage helper ──────────────────────────────────────────────────────
 
 function readStored(): CartLine[] {
   if (typeof window === "undefined") return [];
@@ -37,17 +46,47 @@ function readStored(): CartLine[] {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as CartLine[];
-    if (!Array.isArray(parsed)) return [];
-    return parsed;
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
 }
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
+// ─── CartUIProvider ───────────────────────────────────────────────────────────
+/**
+ * Isolated drawer open/close state.
+ * Wraps ONLY the CartDrawer so that toggling the drawer does NOT
+ * re-render any component subscribed to cart data (product pages, navbar, etc).
+ */
+export function CartUIProvider({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpenState] = useState(false);
+
+  const setIsOpen = useCallback((open: boolean) => {
+    setIsOpenState(open);
+  }, []);
+
+  const value = useMemo<CartUICtx>(
+    () => ({ isOpen, setIsOpen }),
+    [isOpen, setIsOpen],
+  );
+
+  return (
+    <CartUIContext.Provider value={value}>{children}</CartUIContext.Provider>
+  );
+}
+
+// ─── CartDataProvider ─────────────────────────────────────────────────────────
+/**
+ * Owns all cart line data, computed derivations, and mutation actions.
+ * Does NOT own drawer open state — that lives in CartUIProvider.
+ * Changing cart lines does NOT trigger CartUIContext subscribers.
+ */
+export function CartDataProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLinesState] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+
+  // Grab setIsOpen from UI context to open drawer on addToCart
+  const cartUI = useContext(CartUIContext);
 
   useEffect(() => {
     setLinesState(readStored());
@@ -90,28 +129,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           ];
         }
         const copy = [...prev];
-        copy[idx] = {
-          ...copy[idx],
-          quantity: copy[idx].quantity + qty,
-        };
+        copy[idx] = { ...copy[idx], quantity: copy[idx].quantity + qty };
         return copy;
       });
-      
-      setIsOpen(true); // Open drawer on add
+
+      // Open drawer via UI context — does not cause CartDataContext re-render
+      cartUI?.setIsOpen(true);
 
       toast.success("Added to your ritual cart", {
         description: `${input.name} · ${qty} item(s)`,
       });
     },
-    [setLinesSafe],
+    [setLinesSafe, cartUI],
   );
 
   const setQty = useCallback(
     (productId: string, qty: number) => {
       if (qty < 1) {
-        setLinesSafe((prev) =>
-          prev.filter((l) => l.productId !== productId),
-        );
+        setLinesSafe((prev) => prev.filter((l) => l.productId !== productId));
         return;
       }
       setLinesSafe((prev) =>
@@ -132,12 +167,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => setLinesSafe([]), [setLinesSafe]);
 
-  const value = useMemo<CartCtx>(() => {
-    const itemCount = lines.reduce((acc, line) => acc + line.quantity, 0);
-    const subtotal = lines.reduce(
-      (acc, line) => acc + line.price * line.quantity,
-      0,
-    );
+  const value = useMemo<CartDataCtx>(() => {
+    const itemCount = lines.reduce((acc, l) => acc + l.quantity, 0);
+    const subtotal  = lines.reduce((acc, l) => acc + l.price * l.quantity, 0);
     return {
       lines,
       itemCount,
@@ -147,16 +179,40 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeLine,
       clearCart,
       hydrated,
-      isOpen,
-      setIsOpen,
     };
-  }, [lines, addToCart, setQty, removeLine, clearCart, hydrated, isOpen]);
+  }, [lines, addToCart, setQty, removeLine, clearCart, hydrated]);
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartDataContext.Provider value={value}>{children}</CartDataContext.Provider>
+  );
 }
 
-export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used within CartProvider");
+// ─── Hooks ────────────────────────────────────────────────────────────────────
+
+export function useCartData(): CartDataCtx {
+  const ctx = useContext(CartDataContext);
+  if (!ctx) throw new Error("useCartData must be used within CartDataProvider");
   return ctx;
 }
+
+export function useCartUI(): CartUICtx {
+  const ctx = useContext(CartUIContext);
+  if (!ctx) throw new Error("useCartUI must be used within CartUIProvider");
+  return ctx;
+}
+
+/**
+ * Backward-compatible hook — merges both contexts.
+ * Existing components (Navbar, ProductCard, etc.) continue to work unchanged.
+ *
+ * NOTE: Using this in a component means it will re-render on BOTH data AND
+ * UI state changes. Prefer `useCartData` or `useCartUI` when you only need one.
+ */
+export function useCart(): CartDataCtx & CartUICtx {
+  const data = useCartData();
+  const ui   = useCartUI();
+  return useMemo(() => ({ ...data, ...ui }), [data, ui]);
+}
+
+// Legacy alias — some files import CartProvider directly
+export { CartDataProvider as CartProvider };

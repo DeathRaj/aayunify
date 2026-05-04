@@ -27,8 +27,8 @@ export const defaultProductsSeed: SeedProductInput[] = [
     usage:
       "Stir ½–1 tsp into lukewarm water, smoothie, honey, or your favourite ritual drink once or twice daily, or as directed by your healthcare practitioner.",
     images: [
-      "https://images.unsplash.com/photo-1576045057995-435f21dfdae4?q=80&w=1400&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1400&auto=format&fit=crop",
+      "/images/moringa-powder-1.jpg",
+      "/images/moringa-powder-2.jpg",
     ],
     badges: ["bestseller", "sale"],
     inventory: 120,
@@ -55,8 +55,8 @@ export const defaultProductsSeed: SeedProductInput[] = [
     usage:
       "Drop one tablet into 200ml water, wait until fully dissolved, sip slowly. Preferably after a light breakfast or guided by your healthcare practitioner.",
     images: [
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505751172876-fa192ed6cdf4?q=80&w=1400&auto=format&fit=crop",
+      "/images/acv-moringa-1.jpg",
+      "/images/acv-moringa-2.jpg",
     ],
     badges: ["sale"],
     inventory: 180,

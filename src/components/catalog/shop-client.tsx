@@ -57,7 +57,7 @@ function InnerShopShell({ fallback }: { fallback: Parameters<typeof useProductsF
         </p>
       ) : null}
 
-      <div className="mt-12 flex flex-col gap-11 lg:flex-row lg:justify-between lg:gap-28">
+      <div className="mt-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
         <SearchBarCompact value={queryInput} onChange={setQueryInput} />
         <CategoryFilter current={category} onChange={(next) => setCategory(next)} />
       </div>

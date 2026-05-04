@@ -4,7 +4,6 @@
 
 :root {
   color-scheme: light;
-  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
 }
 
 html {
@@ -13,9 +12,29 @@ html {
 
 body {
   @apply bg-cream text-botanical-900 font-sans antialiased;
-  background-image: var(--grain);
-  background-attachment: fixed;
 }
+
+/*
+ * PERFORMANCE FIX: `background-attachment: fixed` is removed from body.
+ *
+ * `fixed` backgrounds opt the element OUT of GPU-composited scrolling on
+ * every mobile browser (Chrome for Android, Safari iOS) and many laptops.
+ * The browser must repaint the entire background on EVERY scroll frame,
+ * causing dropped frames and scroll jank.
+ *
+ * Solution: Use a ::before pseudo-element with `position: fixed` and
+ * `pointer-events: none` to achieve the exact same visual effect while
+ * keeping body scroll fully GPU-composited.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
 ::selection {
   background: rgba(201, 162, 77, 0.35);
 }
@@ -37,4 +56,36 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /*
+   * Strategic will-change utilities.
+   * Apply `.will-animate` just before a heavy animation begins.
+   * Apply `.animation-done` immediately after it completes.
+   * Never leave will-change: transform/opacity on permanently unless justified
+   * (e.g. cart drawer — which always animates in/out).
+   */
+  .will-animate {
+    will-change: transform, opacity;
+  }
+
+  .animation-done {
+    will-change: auto;
+  }
+}
+
+/*
+ * CSS floating animation for the WebGL degradation fallback image.
+ * Runs entirely on the GPU compositor — no layout, no paint.
+ * Uses transform: translateY only (the only property that is
+ * truly compositor-thread-only in all browsers).
+ */
+@keyframes webgl-float {
+  0%, 100% { transform: translateY(0px) scale(1);    opacity: 0.48; }
+  50%       { transform: translateY(-12px) scale(1.01); opacity: 0.54; }
+}
+
+.webgl-float-fallback {
+  animation: webgl-float 6s ease-in-out infinite;
+  /* Prevent animation from blocking interactions on the layer above */
+  pointer-events: none;
 }

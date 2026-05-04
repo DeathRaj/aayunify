@@ -18,8 +18,8 @@ export function CategoryFilter({
   const values: ProductCategory[] = ["All", "Powders", "Effervescents"];
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
-      <p className="text-xs uppercase tracking-[0.4em] text-botanical-500">Filter modality</p>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+      <p className="shrink-0 text-xs uppercase tracking-[0.4em] text-botanical-500">Filter modality</p>
       <div className="flex flex-wrap gap-3">
         {values.map((value) => (
           <button

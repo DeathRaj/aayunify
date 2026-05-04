@@ -86,7 +86,7 @@ export function ProductsManager({ seedDocs }: { seedDocs: ProductDoc[] }) {
         badges: draft.badges,
         sku: draft.sku?.trim() || undefined,
         compareAtPrice: draft.compareAtPrice || undefined,
-        images: images.length ? images : [`https://images.unsplash.com/photo-1576045057995-435f21dfdae4?q=80&w=1200`],
+        images: images.length ? images : ["/images/moringa-powder-1.jpg"],
       };
 
       await upsertProduct(body);
