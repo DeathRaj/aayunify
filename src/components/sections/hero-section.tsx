@@ -54,13 +54,13 @@ export function HeroSection() {
   const prefersReducedMotion = useReducedMotion();
 
   // When prefers-reduced-motion is set, skip stagger and show content instantly
-  const containerVariants = prefersReducedMotion
+  const containerVariants = (prefersReducedMotion
     ? { hidden: { opacity: 1 }, show: { opacity: 1 } }
-    : staggerContainer;
+    : staggerContainer) as Variants;
 
-  const itemVariants = prefersReducedMotion
+  const itemVariants = (prefersReducedMotion
     ? { hidden: { opacity: 1, y: 0 }, show: { opacity: 1, y: 0 } }
-    : fadeUp;
+    : fadeUp) as Variants;
 
   return (
     <section className="relative overflow-hidden rounded-[32px] border border-botanical-100 bg-gradient-to-br from-botanical-50 via-cream to-parchment px-6 py-16 lg:px-20 lg:py-24 sm:py-20 shadow-premium">

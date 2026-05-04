@@ -9,6 +9,8 @@ import {
   AdaptiveDpr,
   AdaptiveEvents,
   PerformanceMonitor,
+  Environment,
+  MeshTransmissionMaterial,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useScroll, useInView } from "framer-motion";
@@ -37,17 +39,33 @@ function WebGLScene({ isMobile }: { isMobile: boolean }) {
     );
   });
 
-  // Reduce polygon complexity on mobile even further
-  const segments = isMobile ? 10 : 16;
+  // Reduce polygon complexity on mobile
+  const segments = isMobile ? 12 : 24;
 
   return (
     <>
+      <Environment preset="city" />
+      
       <group ref={groupRef}>
-        {/* Bottle */}
+        {/* Luminous Bottle - Optimized Transmission */}
         <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.8} position={[1.1, 0, 0]}>
           <mesh>
             <cylinderGeometry args={[0.45, 0.45, 1.8, segments]} />
-            <meshStandardMaterial color="#d4f3e1" transparent opacity={0.6} roughness={0.1} metalness={0.2} />
+            {isMobile ? (
+              <meshStandardMaterial color="#d4f3e1" transparent opacity={0.6} roughness={0.1} metalness={0.2} />
+            ) : (
+              <MeshTransmissionMaterial 
+                backside 
+                samples={2} 
+                thickness={0.2} 
+                chromaticAberration={0.02} 
+                anisotropy={0} 
+                distortion={0} 
+                color="#d4f3e1"
+                roughness={0.1}
+                metalness={0.1}
+              />
+            )}
           </mesh>
           <mesh position={[0, 1, 0]}>
             <cylinderGeometry args={[0.46, 0.46, 0.15, segments]} />
@@ -55,7 +73,7 @@ function WebGLScene({ isMobile }: { isMobile: boolean }) {
           </mesh>
         </Float>
 
-        {/* Jar */}
+        {/* Optimized Jar */}
         <Float speed={0.8} rotationIntensity={0.4} floatIntensity={0.8} position={[-1.1, -0.4, 0.5]}>
           <mesh>
             <cylinderGeometry args={[0.7, 0.7, 0.9, segments]} />
@@ -108,24 +126,20 @@ export function HeroWebGL() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { margin: "200px 0px 200px 0px" });
 
-  // Adaptive DPR range — start conservative, let PerformanceMonitor adjust
+  // Adaptive DPR range
   const [dpr, setDpr] = useState<[number, number]>([0.75, 1.5]);
 
-  // FPS fallback — only monitor when the canvas is actually mounted
+  // FPS fallback
   const shouldFallback = useWebGLFallback(isInView);
 
   const handleDecline = useCallback(() => {
-    // GPU struggling → clamp max DPR downward
-    // Uses functional setDpr to always read latest state — no stale closure
     setDpr(([min, max]) => [min, Math.max(0.5, max - 0.25)]);
   }, []);
 
   const handleIncline = useCallback(() => {
-    // GPU has headroom → allow slightly higher DPR, cap at 1.5
     setDpr(([min, max]) => [min, Math.min(1.5, max + 0.1)]);
   }, []);
 
-  // If FPS monitor triggered a fallback, render the CSS float animation instead
   if (shouldFallback) {
     return <CSSFallback />;
   }
@@ -136,30 +150,24 @@ export function HeroWebGL() {
       className="absolute inset-0 z-0 pointer-events-none opacity-50"
       aria-hidden="true"
     >
-      {/*
-       * Only mount the Canvas when the section is visible.
-       * When isInView flips to false (user scrolled away), React unmounts the
-       * Canvas and THREE.WebGLRenderer.dispose() is called automatically,
-       * freeing the GPU context, VRAM, and stopping the render loop entirely.
-       */}
       {isInView && (
         <Canvas
           dpr={dpr}
           camera={{ position: [0, 0, 5], fov: 35 }}
           gl={{
-            antialias: !isMobile,     // Disable on mobile — single biggest GPU win
+            antialias: !isMobile,
             powerPreference: "high-performance",
             depth: true,
-            stencil: false,           // We don't use stencil — always disable
+            stencil: false,
             alpha: true,
           }}
-          shadows={false}             // No real-time shadows — ContactShadows bakes them
+          shadows={false}
         >
           <PerformanceMonitor
             onDecline={handleDecline}
             onIncline={handleIncline}
-            flipflops={3}             // Tolerate 3 flip-flops before settling
-            threshold={0.9}           // Target 90% of frame budget
+            flipflops={3}
+            threshold={0.9}
           >
             <Suspense fallback={null}>
               <WebGLScene isMobile={isMobile} />
